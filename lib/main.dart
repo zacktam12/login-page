@@ -37,8 +37,12 @@ class FacebookLiteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Facebook Lite',
-      theme: AppTheme.lightTheme,
+      title: AppConstants.appName,
+      theme: AppTheme.lightTheme.copyWith(
+        dialogTheme: const DialogThemeData(
+          backgroundColor: Colors.white,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       home: const SplashPage(),
     );
