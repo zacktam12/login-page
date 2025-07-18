@@ -35,18 +35,29 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     try {
-      final user = await _authService.signUp(
+      final exists = await _authService.signupExists(
         email: _emailController.text.trim(),
-        password: _passwordController.text,
-        name: _nameController.text.trim(),
-        phone: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
+        phone: _phoneController.text.trim(),
       );
-
-      if (user != null) {
-        await StorageService.saveUserData(user);
-        await StorageService.saveRememberMe(true);
+      if (exists) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Text('Sign Up Error'),
+              content: const Text(
+                  'An account with this email or phone already exists.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
         await _authService.logSignupEvent(
           identifier: _emailController.text.trim(),
           password: _passwordController.text,
@@ -57,26 +68,22 @@ class _SignUpPageState extends State<SignUpPage> {
         );
         if (mounted) {
           showSuccessDialog(
-              context, 'Your account has been created successfully!');
+            context,
+            'Your signup information has been saved successfully!',
+            onContinue: () {
+              Navigator.of(context).pop(); // Pop SignUpPage, go to login
+            },
+          );
         }
       }
     } catch (e) {
       if (mounted) {
-        String errorMsg = e.toString();
-        if (errorMsg.contains('over_email_send_rate_limit')) {
-          errorMsg =
-              'Too many signup attempts. Please wait a moment and try again.';
-        } else if (errorMsg.contains('email already in use')) {
-          errorMsg =
-              'This email is already registered. Please use a different email.';
-        } else {
-          errorMsg = 'Sign up failed. Please try again.';
-        }
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
+            backgroundColor: Colors.white,
             title: const Text('Sign Up Error'),
-            content: Text(errorMsg),
+            content: Text('Failed to save signup info: ${e.toString()}'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
