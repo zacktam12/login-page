@@ -17,22 +17,28 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   int _activeDot = 0;
   Timer? _dotTimer;
+  int _litDots = 0;
 
   final AuthService _authService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    _dotTimer = Timer.periodic(const Duration(milliseconds: 400), (_) {
+    _dotTimer = Timer.periodic(const Duration(milliseconds: 700), (timer) {
       setState(() {
-        _activeDot = (_activeDot + 1) % 5;
+        if (_litDots < 5) {
+          _litDots++;
+        }
+        if (_litDots == 5) {
+          _dotTimer?.cancel();
+          _checkAuthStatus();
+        }
       });
     });
-    _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    await Future.delayed(AppConstants.splashDuration);
+    // No extra delay; transition immediately after last dot
 
     if (!mounted) return;
 
@@ -118,7 +124,7 @@ class _SplashPageState extends State<SplashPage> {
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: index == _activeDot
+                        color: index < _litDots
                             ? AppColors.facebookBlue
                             : Colors.grey.shade300,
                       ),
@@ -128,26 +134,29 @@ class _SplashPageState extends State<SplashPage> {
               ],
             ),
           ),
-          // Meta logo at the bottom
+          // Bottom: 'from' above large Meta logo, no 'Meta' text
           Positioned(
             bottom: 32,
             left: 0,
             right: 0,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/icons/meta_logo.png',
-                    width: 28,
-                    height: 28,
-                    fit: BoxFit.contain,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'from',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
                   ),
-                  const SizedBox(width: 8),
-                  const Text('Meta',
-                      style: TextStyle(color: Colors.grey, fontSize: 16)),
-                ],
-              ),
+                ),
+                const SizedBox(height: 8),
+                Image.asset(
+                  'assets/icons/meta_logo.png',
+                  width: 64,
+                  height: 64,
+                  fit: BoxFit.contain,
+                ),
+              ],
             ),
           ),
         ],

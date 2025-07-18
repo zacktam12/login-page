@@ -7,13 +7,19 @@ import 'presentation/pages/splash/splash_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Lock orientation to portrait only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   // Initialize Supabase
   await Supabase.initialize(
     url: AppConstants.supabaseUrl,
     anonKey: AppConstants.supabaseAnonKey,
   );
-  
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -21,7 +27,7 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-  
+
   runApp(const FacebookLiteApp());
 }
 
