@@ -30,7 +30,6 @@ class _FindAccountPageState extends State<FindAccountPage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Text(
@@ -185,7 +184,7 @@ class _FindAccountPageState extends State<FindAccountPage> {
                 ),
                 onPressed: _isLoading ? () {} : _handleContinue,
                 child: _isLoading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
