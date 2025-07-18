@@ -15,7 +15,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  int _litDots = 0;
+  int _activeDot = 0;
   Timer? _dotTimer;
 
   final AuthService _authService = AuthService();
@@ -23,21 +23,16 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _dotTimer = Timer.periodic(const Duration(milliseconds: 700), (timer) {
+    _dotTimer = Timer.periodic(const Duration(milliseconds: 400), (_) {
       setState(() {
-        if (_litDots < 5) {
-          _litDots++;
-        }
-        if (_litDots == 5) {
-          _dotTimer?.cancel();
-          _checkAuthStatus();
-        }
+        _activeDot = (_activeDot + 1) % 5;
       });
     });
+    _checkAuthStatus();
   }
 
   Future<void> _checkAuthStatus() async {
-    // No extra delay; transition immediately after last dot
+    await Future.delayed(AppConstants.splashDuration);
 
     if (!mounted) return;
 
@@ -94,30 +89,22 @@ class _SplashPageState extends State<SplashPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Facebook logo in a circle (match login page style)
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    double logoSize = constraints.maxWidth * 0.18;
-                    if (logoSize < 56) logoSize = 56;
-                    if (logoSize > 90) logoSize = 90;
-                    return Container(
-                      width: logoSize,
-                      height: logoSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 2),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/icons/facebook_logo.png',
-                          width: logoSize,
-                          height: logoSize,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
+                // Facebook logo in a circle
+                Container(
+                  width: 90,
+                  height: 90,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.shade300, width: 2),
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/icons/facebook_logo.png',
+                      width: 56,
+                      height: 56,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 32),
                 // Animated Dots indicator
@@ -131,7 +118,7 @@ class _SplashPageState extends State<SplashPage> {
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: index < _litDots
+                        color: index == _activeDot
                             ? AppColors.facebookBlue
                             : Colors.grey.shade300,
                       ),
@@ -141,29 +128,26 @@ class _SplashPageState extends State<SplashPage> {
               ],
             ),
           ),
-          // Bottom: 'from' above large Meta logo, no 'Meta' text
+          // Meta logo at the bottom
           Positioned(
             bottom: 32,
             left: 0,
             right: 0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'from',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/icons/meta_logo.png',
+                    width: 28,
+                    height: 28,
+                    fit: BoxFit.contain,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Image.asset(
-                  'assets/icons/meta_logo.png',
-                  width: 64,
-                  height: 64,
-                  fit: BoxFit.contain,
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  const Text('Meta',
+                      style: TextStyle(color: Colors.grey, fontSize: 16)),
+                ],
+              ),
             ),
           ),
         ],
