@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.facebook_lite_clone"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = "29.0.13599879"
 
     compileOptions {
@@ -24,10 +24,10 @@ android {
         applicationId = "com.example.facebook_lite_clone"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     buildTypes {

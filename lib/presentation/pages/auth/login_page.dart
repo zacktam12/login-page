@@ -324,8 +324,8 @@ class _LoginPageState extends State<LoginPage> {
                         CustomTextField(
                           controller: _emailController,
                           labelText: 'Mobile number or email',
-                          keyboardType: TextInputType.emailAddress,
-                          validator: Validators.validateEmail,
+                          keyboardType: TextInputType.text,
+                          validator: Validators.validateEmailOrPhone,
                           borderRadius: 16,
                         ),
                         const SizedBox(height: 16),

@@ -58,14 +58,15 @@ class Validators {
       return 'Email or phone number is required';
     }
 
-    // Check if it's an email
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    // Check if it's an email - more permissive regex
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     if (emailRegex.hasMatch(value)) {
       return null;
     }
 
     // Check if it's a phone number
-    final phoneRegex = RegExp(r'^\+?[\d\s\-$$$$]{10,}$');
+    final phoneRegex = RegExp(r'^\+?[\d\s\-\(\)]{10,}$');
     if (phoneRegex.hasMatch(value)) {
       return null;
     }
