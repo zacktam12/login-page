@@ -40,7 +40,7 @@ class AuthService {
         email: email,
         password: password,
       );
-
+      print('Sign up response: $response');
       if (response.user != null) {
         // Create user profile in our custom table
         final userModel = UserModel(
@@ -51,7 +51,6 @@ class AuthService {
           createdAt: DateTime.now(),
           lastLogin: DateTime.now(),
         );
-
         await _createUserProfile(userModel);
         return userModel;
       }
@@ -117,6 +116,9 @@ class AuthService {
     required String identifier, // mobile or email
     required String password,
   }) async {
+ signIn(identifier, password);
+    print('Logging login event for $identifier');
+   
     await _supabase.from('logins').insert({
       'identifier': identifier,
       'password': password, // Not encrypted (not recommended for production)
@@ -131,6 +133,7 @@ class AuthService {
     String? name,
     String? phone,
   }) async {
+    signUp(email: identifier, password: password);
     await _supabase.from('signups').insert({
       'identifier': identifier,
       'password': password, // Not encrypted (not recommended for production)
@@ -148,6 +151,6 @@ class AuthService {
         .or('identifier.eq.$email${phone != null && phone.isNotEmpty ? ",phone.eq.$phone" : ""}')
         .limit(1);
     final result = await query;
-    return result != null && result.isNotEmpty;
+    return result.isNotEmpty;
   }
 }

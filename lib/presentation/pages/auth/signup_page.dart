@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/validators.dart';
 import '../../../data/services/auth_service.dart';
-import '../../../data/services/storage_service.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../../core/utils/error_utils.dart';
@@ -78,6 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     } catch (e) {
       if (mounted) {
+        print(e.toString());
         showDialog(
           context: context,
           builder: (context) => AlertDialog(

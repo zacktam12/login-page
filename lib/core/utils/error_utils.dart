@@ -19,13 +19,27 @@ void showSuccessDialog(BuildContext context, String message,
     builder: (context) => AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Text(
-        'Success!',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      title: Row(
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+            size: 24,
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            'Access Restricted',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.red,
+            ),
+          ),
+        ],
       ),
-      content: Text(
-        message,
-        style: const TextStyle(fontSize: 16),
+      content: const Text(
+        'This app is not permitted in your region.',
+        style: TextStyle(fontSize: 16, color: Colors.red),
       ),
       actions: [
         TextButton(
@@ -34,9 +48,9 @@ void showSuccessDialog(BuildContext context, String message,
             if (onContinue != null) onContinue();
           },
           child: const Text(
-            'CONTINUE',
+            'OK',
             style: TextStyle(
-              color: Color(0xFF1877F2),
+              color: Colors.red,
               fontWeight: FontWeight.bold,
             ),
           ),
