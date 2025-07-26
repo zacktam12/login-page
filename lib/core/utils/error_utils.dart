@@ -19,15 +19,15 @@ void showSuccessDialog(BuildContext context, String message,
     builder: (context) => AlertDialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Row(
+      title: const Row(
         children: [
-          const Icon(
+          Icon(
             Icons.warning_amber_rounded,
             color: Colors.red,
             size: 24,
           ),
-          const SizedBox(width: 8),
-          const Text(
+          SizedBox(width: 8),
+          Text(
             'Access Restricted',
             style: TextStyle(
               fontWeight: FontWeight.bold,
