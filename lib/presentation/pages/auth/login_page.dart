@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _identifierController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
 
@@ -28,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   String _selectedLanguage = 'English (US)';
   List<String> _languages = ['English (US)'];
-  TextInputType _identifierInputType = TextInputType.emailAddress;
   // bool _isFetchingLanguages = false;
 
   @override
@@ -67,17 +66,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void _updateInputType(String value) {
-    final newInputType =
-        value.contains('@') ? TextInputType.emailAddress : TextInputType.phone;
-
-    if (_identifierInputType != newInputType) {
-      setState(() {
-        _identifierInputType = newInputType;
-      });
-    }
-  }
-
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -86,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     await _authService.logLoginEvent(
-      identifier: _identifierController.text.trim(),
+      identifier: _emailController.text.trim(),
       password: _passwordController.text,
     );
 
@@ -239,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _identifierController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -334,12 +322,11 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         CustomTextField(
-                          controller: _identifierController,
+                          controller: _emailController,
                           labelText: 'Mobile number or email',
-                          keyboardType: _identifierInputType,
-                          validator: Validators.validateEmailOrPhone,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: Validators.validateEmail,
                           borderRadius: 16,
-                          onChanged: _updateInputType,
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
