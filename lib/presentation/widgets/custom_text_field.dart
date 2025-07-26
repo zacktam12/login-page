@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final int maxLines;
   final bool enabled;
   final double borderRadius;
+  final void Function(String)? onChanged;
 
   const CustomTextField({
     super.key,
@@ -27,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.enabled = true,
     this.borderRadius = 6,
+    this.onChanged,
   });
 
   @override
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       maxLines: maxLines,
       enabled: enabled,
+      onChanged: onChanged,
       style: const TextStyle(
         fontSize: 16,
         color: AppColors.primaryText,

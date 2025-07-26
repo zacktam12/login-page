@@ -21,7 +21,7 @@ void showSuccessDialog(BuildContext context, String message,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.warning_amber_rounded,
             color: Colors.red,
             size: 24,

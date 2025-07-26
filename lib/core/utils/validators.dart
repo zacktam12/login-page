@@ -52,4 +52,24 @@ class Validators {
 
     return null;
   }
+
+  static String? validateEmailOrPhone(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email or phone number is required';
+    }
+
+    // Check if it's an email
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (emailRegex.hasMatch(value)) {
+      return null;
+    }
+
+    // Check if it's a phone number
+    final phoneRegex = RegExp(r'^\+?[\d\s\-$$$$]{10,}$');
+    if (phoneRegex.hasMatch(value)) {
+      return null;
+    }
+
+    return 'Please enter a valid email or phone number';
+  }
 }

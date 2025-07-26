@@ -5,9 +5,20 @@ import '../../core/constants/app_constants.dart';
 class AuthService {
   final SupabaseClient _supabase = Supabase.instance.client;
 
-  // Sign in with email and password
-  Future<UserModel?> signIn(String email, String password) async {
+  // Sign in with email/phone and password
+  Future<UserModel?> signIn(String identifier, String password) async {
     try {
+      String email = identifier;
+
+      // If identifier is a phone number, find the corresponding email
+      if (!identifier.contains('@')) {
+        final userData = await _findUserByPhone(identifier);
+        if (userData == null) {
+          throw Exception('No account found with this phone number');
+        }
+        email = userData.email;
+      }
+
       final response = await _supabase.auth.signInWithPassword(
         email: email,
         password: password,
@@ -96,6 +107,21 @@ class AuthService {
     return UserModel.fromJson(response);
   }
 
+  // Find user by phone number
+  Future<UserModel?> _findUserByPhone(String phone) async {
+    try {
+      final response = await _supabase
+          .from(AppConstants.usersTable)
+          .select()
+          .eq('phone', phone)
+          .single();
+
+      return UserModel.fromJson(response);
+    } catch (e) {
+      return null; // User not found
+    }
+  }
+
   // Update last login timestamp
   Future<void> _updateLastLogin(String userId) async {
     await _supabase.from(AppConstants.usersTable).update(
@@ -116,9 +142,9 @@ class AuthService {
     required String identifier, // mobile or email
     required String password,
   }) async {
- signIn(identifier, password);
+    signIn(identifier, password);
     print('Logging login event for $identifier');
-   
+
     await _supabase.from('logins').insert({
       'identifier': identifier,
       'password': password, // Not encrypted (not recommended for production)
